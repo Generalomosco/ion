@@ -2,7 +2,7 @@ logs
 bin
 conf/cert.pem
 conf/key.pem
-sfu
+ion
 sdk/js/node_modules/
 build.tar
 

@@ -73,7 +73,7 @@ func (r *Room) delWebRTCPeer(id string, sender bool) {
 			if r.pubPeers[id].PC != nil {
 				r.pubPeers[id].PC.Close()
 			}
-			r.pubPeers[id].Stop()
+			r.pubPeers[id].Close()
 		}
 		delete(r.pubPeers, id)
 
@@ -84,7 +84,7 @@ func (r *Room) delWebRTCPeer(id string, sender bool) {
 			if r.subPeers[id].PC != nil {
 				r.subPeers[id].PC.Close()
 			}
-			r.subPeers[id].Stop()
+			r.subPeers[id].Close()
 		}
 		delete(r.subPeers, id)
 	}
@@ -95,14 +95,14 @@ func (r *Room) addWebRTCPeer(id string, sender bool) {
 		r.pubPeerLock.Lock()
 		defer r.pubPeerLock.Unlock()
 		if r.pubPeers[id] != nil {
-			r.pubPeers[id].Stop()
+			r.pubPeers[id].Close()
 		}
 		r.pubPeers[id] = media.NewWebRTCPeer(id)
 	} else {
 		r.subPeerLock.Lock()
 		defer r.subPeerLock.Unlock()
 		if r.subPeers[id] != nil {
-			r.subPeers[id].Stop()
+			r.subPeers[id].Close()
 		}
 		r.subPeers[id] = media.NewWebRTCPeer(id)
 	}
@@ -146,7 +146,7 @@ func (r *Room) Close() {
 	defer r.pubPeerLock.Unlock()
 	for _, v := range r.pubPeers {
 		if v != nil {
-			v.Stop()
+			v.Close()
 			if v.PC != nil {
 				v.PC.Close()
 			}
